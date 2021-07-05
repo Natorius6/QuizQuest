@@ -33,10 +33,10 @@ for i, question in enumerate(questions):
     for i, wrong_ans in enumerate(question['incorrect_answers']):
         print(i + 2, wrong_ans)
     user_answer = get_integer_input('Type 1, 2, 3 or 4 to select your answer \n', 'Please select your answer using by typing 1, 2, 3 or 4', 0, 5)
-    if user_answer == 1:
+    if user_answer == question['correct_answer']:
         print('congrats you got the answer correct!')
         num_correct += 1
-    elif user_answer == 2 or 3 or 4:
+    elif user_answer == wrong_ans:
         print('You got the answer incorrect!')
 if num_correct == 10:
     replay = input("congrats you got a perfect score. You are clearly a genius. \n Press enter to replay. \n")
