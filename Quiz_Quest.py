@@ -29,17 +29,18 @@ while True:
     while logged_in == False:
         new_user = get_integer_input("would you like to create a new user or login to existing user. \n1 new user. \n2 login to existing user. \n", "please enter 1 or 2 to select your answer", 0, 3)
         if new_user == 1:
-            f= open("QuizQuest/Username.txt", "a")
+            f= open("Username.txt", "a")
             username = input("please enter a username. please note that no numbers are allowed. \n")
             password = input("please enter a password. please note that no numbers are allowed. \n")
             os.system('cls')
-            password_hashing = hashlib.sha224(Password.encode())
+            password_hashing = hashlib.sha224(password.encode())
             hashed = password_hashing.hexdigest()
             f.write(f"{username} {hashed} \n")
             f.close()
+            logged_in = True
 
         if new_user == 2:
-            f= open("QuizQuest/Username.txt", "r")
+            f= open("Username.txt", "r")
             username = input("please enter your username. \n")
             password = input("please enter your password. \n")
             os.system('cls')
@@ -57,6 +58,7 @@ while True:
                 if user != username or password != hashed:
                     print("username or password incorrect")
             f.close()
+            logged_in = True
 
     print('''\033[1;32;40m
     *****************************WELCOME TO THE \033[1;31;40m QUIZ \033[1;32;40m QUEST*********************************
@@ -94,8 +96,8 @@ while True:
             replay = input(f"You got {num_correct}. Maybe try again. \n Press enter to replay. \n")
         if num_correct == 1:
             replay = input(f"You got {num_correct} \n Press enter to replay. \n")
-        f= open("QuizQuest/Scores.txt", "a")
-        f.write(f"{username}score {num_correct} \n")
+        f= open("Scores.txt", "a")
+        f.write(f"{username} {num_correct} \n")
 
 # Ideas
 # add multiple rounds
