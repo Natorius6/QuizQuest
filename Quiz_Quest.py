@@ -28,10 +28,11 @@ while True:
 
     while logged_in == False:
         new_user = get_integer_input("would you like to create a new user or login to existing user. \n1 new user. \n2 login to existing user. \n", "please enter 1 or 2 to select your answer", 0, 3)
+        #creates new user
         if new_user == 1:
             f= open("Username.txt", "a")
-            username = input("please enter a username. please note that no numbers are allowed. \n")
-            password = input("please enter a password. please note that no numbers are allowed. \n")
+            username = input("please enter a username. please note that no spaces are allowed. \n")
+            password = input("please enter a password. please note that no spaces are allowed. \n")
             os.system('cls')
             password_hashing = hashlib.sha224(password.encode())
             hashed = password_hashing.hexdigest()
@@ -39,6 +40,7 @@ while True:
             f.close()
             logged_in = True
 
+        #logs in to existing user
         if new_user == 2:
             f= open("Username.txt", "r")
             username = input("please enter your username. \n")
@@ -64,40 +66,59 @@ while True:
     *****************************WELCOME TO THE \033[1;31;40m QUIZ \033[1;32;40m QUEST*********************************
         \033[1;30;47m your mission if you choose to accept is to answer the most questions possible.\033[1;33;40m
     ''')
-    num_correct = 0
-    for i, question in enumerate(questions):
-        print(f"question {i + 1}")
-        print(unescape(question['question']))
-        all_answers = []
-        all_answers.append(question['correct_answer'])
-        for ans in question["incorrect_answers"]:
-            all_answers.append(ans)
-        random.shuffle(all_answers)
-        for num, ans in enumerate(all_answers):
-            print(unescape(f"{num+1}: {ans}"))
-        correct_ans = all_answers.index(question['correct_answer']) + 1
-        user_answer = get_integer_input("\n", "answer the question with 1-4.", 0, 5)
-        if user_answer == correct_ans:
-            print("you got the right answer")
-            num_correct += 1
-            num_questions += 1
-        elif user_answer != correct_ans:
-            print("you got it wrong try the next question")
-            num_questions += 1
-        print(correct_ans)
-        if num_questions == 10:
-            quiz_finished = True
-    if quiz_finished == True:
-        if num_correct == 10:
-            replay = input("congrats you got a perfect score. You are clearly a genius. \n Press enter to replay. \n")
-        if 6 <= num_correct >= 9:
-            replay = input(f"You got {num_correct}. So close \n Press enter to replay. \n")
-        if 2 <= num_correct >= 5:
-            replay = input(f"You got {num_correct}. Maybe try again. \n Press enter to replay. \n")
-        if num_correct == 1:
-            replay = input(f"You got {num_correct} \n Press enter to replay. \n")
-        f= open("Scores.txt", "a")
-        f.write(f"{username} {num_correct} \n")
+
+    print("Welcome to your home base, from her you can go do the quiz or check your highscore.")
+    gamemode = get_integer_input("what would you like to do \n1 highscore. \n2 gaming quiz.", "please enter 1 or 2 to select your answer.", 0, 3)
+
+    if gamemode == 1:
+        f= open
+        lines = f.readlines()
+        clean_lines = []
+        for line in lines:
+            arr = line.split(' ')
+            clean_lines.append(arr[0:2])
+        for user, password in clean_lines:
+            if user == username and password == hashed:
+                print("login successful")
+                logged_in = True
+            if user != username or password != hashed:
+                print("username or password incorrect")
+
+    if gamemode == 2:
+        num_correct = 0
+        for i, question in enumerate(questions):
+            print(f"question {i + 1}")
+            print(unescape(question['question']))
+            all_answers = []
+            all_answers.append(question['correct_answer'])
+            for ans in question["incorrect_answers"]:
+                all_answers.append(ans)
+            random.shuffle(all_answers)
+            for num, ans in enumerate(all_answers):
+                print(unescape(f"{num+1}: {ans}"))
+            correct_ans = all_answers.index(question['correct_answer']) + 1
+            user_answer = get_integer_input("\n", "answer the question with 1-4.", 0, 5)
+            if user_answer == correct_ans:
+                print("you got the right answer")
+                num_correct += 1
+                num_questions += 1
+            elif user_answer != correct_ans:
+                print("you got it wrong try the next question")
+                num_questions += 1
+            print(correct_ans)
+            if num_questions == 10:
+                quiz_finished = True
+        if quiz_finished == True:
+            if num_correct == 10:
+                replay = input("congrats you got a perfect score. You are clearly a genius. \n Press enter to replay. \n")
+            if 6 <= num_correct >= 9:
+                replay = input(f"You got {num_correct}. So close \n Press enter to replay. \n")
+            if 2 <= num_correct >= 5:
+                replay = input(f"You got {num_correct}. Maybe try again. \n Press enter to replay. \n")
+            if num_correct == 1:
+                replay = input(f"You got {num_correct} \n Press enter to replay. \n")
+            f= open("Scores.txt", "a")
+            f.write(f"{username} {num_correct} \n")
 
 # Ideas
 # add multiple rounds
