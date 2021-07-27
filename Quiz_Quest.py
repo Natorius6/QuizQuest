@@ -15,15 +15,13 @@ def get_integer_input(message, error, low, high):
         except ValueError:
             print(error)
 
+logged_in = False
+
 while True:
     response = requests.get('https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=multiple')
 
     questions = response.json()['results']
 
-    logged_in = False
-
-    quiz_finished = False
-    num_questions = 0
     num_correct = 0
 
     while logged_in == False:
@@ -68,24 +66,28 @@ while True:
     ''')
 
     print("Welcome to your home base, from her you can go do the quiz or check your highscore.")
+    #user picks where to go
     gamemode = get_integer_input("what would you like to do \n1 highscore. \n2 gaming quiz.", "please enter 1 or 2 to select your answer.", 0, 3)
 
+    #highscores
     if gamemode == 1:
-        f= open
+        f= open("scores.txt", "r")
         lines = f.readlines()
         clean_lines = []
         for line in lines:
             arr = line.split(' ')
             clean_lines.append(arr[0:2])
-        for user, password in clean_lines:
-            if user == username and password == hashed:
-                print("login successful")
-                logged_in = True
-            if user != username or password != hashed:
-                print("username or password incorrect")
+        for user, score in clean_lines:
+            if user == username:
+                print(f"{user} {score}")
 
+    #quiz
     if gamemode == 2:
+
+        quiz_finished = False
+        num_questions = 0
         num_correct = 0
+
         for i, question in enumerate(questions):
             print(f"question {i + 1}")
             print(unescape(question['question']))
@@ -105,9 +107,9 @@ while True:
             elif user_answer != correct_ans:
                 print("you got it wrong try the next question")
                 num_questions += 1
-            print(correct_ans)
             if num_questions == 10:
                 quiz_finished = True
+        #tells user what their score was
         if quiz_finished == True:
             if num_correct == 10:
                 replay = input("congrats you got a perfect score. You are clearly a genius. \n Press enter to replay. \n")
@@ -128,4 +130,3 @@ while True:
 # show improvement over time
 # statistics
 # saving previous questions \ history to file
-# chance to re answer wrong question - like a study app 
