@@ -25,10 +25,10 @@ while True:
     num_correct = 0
 
     while logged_in == False:
-        new_user = get_integer_input("would you like to create a new user or login to existing user. \n1 new user. \n2 login to existing user. \n", "please enter 1 or 2 to select your answer", 0, 3)
+        new_user = get_integer_input("would you like to create a new user or login to existing user. Please note that you have to log in on a new machine. \n1 new user. \n2 login to existing user. \n", "please enter 1 or 2 to select your answer", 0, 3)
         #creates new user
         if new_user == 1:
-            f= open("Username.txt", "a")
+            f= open("QuizQuest/Username.txt", "a")
             username = input("please enter a username. please note that no spaces are allowed. \n")
             password = input("please enter a password. please note that no spaces are allowed. \n")
             os.system('cls')
@@ -40,7 +40,7 @@ while True:
 
         #logs in to existing user
         if new_user == 2:
-            f= open("Username.txt", "r")
+            f= open("QuizQuest/Username.txt", "r")
             username = input("please enter your username. \n")
             password = input("please enter your password. \n")
             os.system('cls')
@@ -67,11 +67,11 @@ while True:
 
     print("Welcome to your home base, from her you can go do the quiz or check your highscore.")
     #user picks where to go
-    gamemode = get_integer_input("what would you like to do \n1 highscore. \n2 gaming quiz.", "please enter 1 or 2 to select your answer.", 0, 3)
+    gamemode = get_integer_input("what would you like to do \n1 highscore. \n2 gaming quiz. \n", "please enter 1 or 2 to select your answer.", 0, 3)
 
     #highscores
     if gamemode == 1:
-        f= open("scores.txt", "r")
+        f= open("QuizQuest/scores.txt", "r")
         lines = f.readlines()
         clean_lines = []
         for line in lines:
@@ -79,7 +79,8 @@ while True:
             clean_lines.append(arr[0:2])
         for user, score in clean_lines:
             if user == username:
-                print(f"{user} {score}")
+                print(f"{user}s highscore is {score}")
+
 
     #quiz
     if gamemode == 2:
@@ -112,21 +113,12 @@ while True:
         #tells user what their score was
         if quiz_finished == True:
             if num_correct == 10:
-                replay = input("congrats you got a perfect score. You are clearly a genius. \n Press enter to replay. \n")
+                replay = input("congrats you got a perfect score. You are clearly a genius. \n Press enter to return to homebase. \n")
             if 6 <= num_correct >= 9:
-                replay = input(f"You got {num_correct}. So close \n Press enter to replay. \n")
+                replay = input(f"You got {num_correct} correct. So close \n Press enter to return to homebase. \n")
             if 2 <= num_correct >= 5:
-                replay = input(f"You got {num_correct}. Maybe try again. \n Press enter to replay. \n")
+                replay = input(f"You got {num_correct} correct. Maybe try again. \n Press enter to return to homebase. \n")
             if num_correct == 1:
-                replay = input(f"You got {num_correct} \n Press enter to replay. \n")
-            f= open("Scores.txt", "a")
+                replay = input(f"You got {num_correct} correct \n Press enter to return to homebase. \n")
+            f= open("QuizQuest/Scores.txt", "a")
             f.write(f"{username} {num_correct} \n")
-
-# Ideas
-# add multiple rounds
-# add multiple users
-# save history
-# show highscore 
-# show improvement over time
-# statistics
-# saving previous questions \ history to file
