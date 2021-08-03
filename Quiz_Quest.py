@@ -25,7 +25,7 @@ while True:
     num_correct = 0
 
     while logged_in == False:
-        new_user = get_integer_input("would you like to create a new user or login to existing user. Please note that you have to log in on a new machine. \n1 new user. \n2 login to existing user. \n", "please enter 1 or 2 to select your answer", 0, 3)
+        new_user = get_integer_input("would you like to create a new user or login to existing user. Please note that you have to create an account if on a new machine. \n1 new user. \n2 login to existing user. \n", "please enter 1 or 2 to select your answer", 0, 3)
         #creates new user
         if new_user == 1:
             f= open("QuizQuest/Username.txt", "a")
@@ -48,17 +48,18 @@ while True:
             hashed = password_hashing.hexdigest()
             lines = f.readlines()
             clean_lines = []
+            valid = False
             for line in lines:
                 arr = line.split(' ')
                 clean_lines.append(arr[0:2])
             for user, password in clean_lines:
                 if user == username and password == hashed:
                     print("login successful")
+                    valid = True
                     logged_in = True
-                if user != username or password != hashed:
-                    print("username or password incorrect")
+            if valid == False:
+                print("username or password incorrect")
             f.close()
-            logged_in = True
 
     print('''\033[1;32;40m
     *****************************WELCOME TO THE \033[1;31;40m QUIZ \033[1;32;40m QUEST*********************************
@@ -80,6 +81,7 @@ while True:
         for user, score in clean_lines:
             if user == username:
                 print(f"{user}s highscore is {score}")
+        return_to_homebase = input("press enter to return to homebase. \n")
 
 
     #quiz
@@ -107,6 +109,7 @@ while True:
                 num_questions += 1
             elif user_answer != correct_ans:
                 print("you got it wrong try the next question")
+                print(f"the right answer was {correct_num}\n")
                 num_questions += 1
             if num_questions == 10:
                 quiz_finished = True
