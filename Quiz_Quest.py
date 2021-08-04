@@ -68,7 +68,11 @@ while True:
 
     print("Welcome to your home base, from her you can go do the quiz or check your highscore.")
     #user picks where to go
-    gamemode = get_integer_input("what would you like to do \n1 highscore. \n2 gaming quiz. \n", "please enter 1 or 2 to select your answer.", 0, 3)
+    gamemode = get_integer_input("what would you like to do \n1 highscore. \n2 gaming quiz. \n3 quit \n", "please enter 1, 2 or 3 to select your answer.", 0, 4)
+
+    #quit
+    if gamemode == 3:
+        break
 
     #highscores
     if gamemode == 1:
@@ -108,8 +112,8 @@ while True:
                 num_correct += 1
                 num_questions += 1
             elif user_answer != correct_ans:
-                print("you got it wrong try the next question")
-                print(f"the right answer was {correct_num}\n")
+                print("you got it wrong")
+                print(f"the right answer was {correct_ans}\n")
                 num_questions += 1
             if num_questions == 10:
                 quiz_finished = True
@@ -119,9 +123,20 @@ while True:
                 replay = input("congrats you got a perfect score. You are clearly a genius. \n Press enter to return to homebase. \n")
             if 6 <= num_correct >= 9:
                 replay = input(f"You got {num_correct} correct. So close \n Press enter to return to homebase. \n")
-            if 2 <= num_correct >= 5:
+            if num_correct == 5:
+                replay = input(f"You got {num_correct} correct. average score. \n Press enter to return to homebase. \n")
+            if 2 <= num_correct >= 4:
                 replay = input(f"You got {num_correct} correct. Maybe try again. \n Press enter to return to homebase. \n")
             if num_correct == 1:
                 replay = input(f"You got {num_correct} correct \n Press enter to return to homebase. \n")
-            f= open("QuizQuest/Scores.txt", "a")
-            f.write(f"{username} {num_correct} \n")
+            # f = open("QuizQuest/Scores.txt", "a+")
+            # lines = f.readlines()
+            # clean_lines = []
+            # for line in lines:
+            #     arr = line.split(' ')
+            #     clean_lines.append(arr[0:2])
+            # for user, score in clean_lines:
+            #     if user == username:
+            #         if score < num_correct:
+
+            #             f.close
