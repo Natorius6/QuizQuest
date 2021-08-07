@@ -27,29 +27,17 @@ def give_user_score(num_correct):
     if num_correct == 1:
         replay = input(f"You got {num_correct} correct \n Press enter to return to homebase. \n")
 
-def end_quiz(num_correct):
-    give_user_score(num_correct)
-    new_file_info = ""
-    scores_file = open("QuizQuest/Scores.txt", "r")
-    lines = scores_file.readlines()
-    clean_lines = []
-    for line in lines:
-        user, score = line.split(' ')
-        if user == username:
-            if int(score) < num_correct:
-                new_line_info = line.replace(score,str(num_correct))
-                new_file_info = f"{new_file_info}{new_line_info}\n"
-            else:
-                new_file_info = f"{new_file_info}{line}"
-        else:
-            new_file_info = f"{new_file_info}{line}"
-    scores_file.close()
-    with open("QuizQuest/Scores.txt", "w") as scores_file:
-        scores_file.write(new_file_info)
 
 logged_in = False
 
 while True:
+
+    file = open("QuizQuest/Scores.txt", "a")
+    file.close()
+
+    file = open("QuizQuest/Username.txt", "a")
+    file.close()
+
     response = requests.get('https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=multiple')
 
     questions = response.json()['results']
@@ -60,7 +48,7 @@ while True:
         new_user = get_integer_input("would you like to create a new user or login to existing user. Please note that you have to create an account if on a new machine. \n1 new user. \n2 login to existing user. \n", "please enter 1 or 2 to select your answer", 0, 3)
         #creates new user
         if new_user == 1:
-            login_file = open("QuizQuest/Username.txt", "a")
+            login_file = open("QuizQuest/Username.txt", "w")
             username = input("please enter a username. please note that no spaces are allowed. \n")
             password = input("please enter a password. please note that no spaces are allowed. \n")
             os.system('cls')
@@ -68,6 +56,9 @@ while True:
             hashed = password_hashing.hexdigest()
             login_file.write(f"{username} {hashed} \n")
             login_file.close()
+            scores_file = open("QuizQuest/Scores.txt", "w")
+            scores_file.write(f"{username} 0\n")
+            scores_file.close()
             logged_in = True
 
         #logs in to existing user
@@ -122,7 +113,6 @@ while True:
 
     #quiz
     if gamemode == 2:
-
         quiz_finished = False
         num_questions = 0
         num_correct = 0
@@ -145,10 +135,27 @@ while True:
                 num_questions += 1
             elif user_answer != correct_ans:
                 print("you got it wrong")
-                print(f"the right answer was {correct_ans}\n")
+                print(f"the correct answer was {correct_ans}\n")
                 num_questions += 1
             if num_questions == 10:
                 quiz_finished = True
         #tells user what their score was
         if quiz_finished == True:
-            end_quiz(num_correct)
+                give_user_score(num_correct)
+                new_file_info = ""
+                scores_file = open("QuizQuest/Scores.txt", "r")
+                lines = scores_file.readlines()
+                clean_lines = []
+                for line in lines:
+                    user, score = line.split(' ')
+                    if user == username:
+                        if int(score) < num_correct:
+                            new_line_info = line.replace(score,str(num_correct))
+                            new_file_info = f"{new_file_info}{new_line_info}\n"
+                        else:
+                            new_file_info = f"{new_file_info}{line}"
+                    else:
+                        new_file_info = f"{new_file_info}{line}"
+                scores_file.close()
+                with open("QuizQuest/Scores.txt", "w") as scores_file:
+                    scores_file.write(new_file_info)
