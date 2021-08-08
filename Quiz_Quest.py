@@ -48,7 +48,7 @@ while True:
         new_user = get_integer_input("would you like to create a new user or login to existing user. Please note that you have to create an account if on a new machine. \n1 new user. \n2 login to existing user. \n", "please enter 1 or 2 to select your answer", 0, 3)
         #creates new user
         if new_user == 1:
-            login_file = open("QuizQuest/Username.txt", "w")
+            login_file = open("QuizQuest/Username.txt", "a")
             username = input("please enter a username. please note that no spaces are allowed. \n")
             password = input("please enter a password. please note that no spaces are allowed. \n")
             os.system('cls')
@@ -56,7 +56,7 @@ while True:
             hashed = password_hashing.hexdigest()
             login_file.write(f"{username} {hashed} \n")
             login_file.close()
-            scores_file = open("QuizQuest/Scores.txt", "w")
+            scores_file = open("QuizQuest/Scores.txt", "a")
             scores_file.write(f"{username} 0\n")
             scores_file.close()
             logged_in = True
@@ -89,12 +89,13 @@ while True:
         \033[1;30;47m your mission if you choose to accept is to answer the most questions possible.\033[1;33;40m
     ''')
 
-    print("Welcome to your home base, from her you can go do the quiz or check your highscore.")
+    print("Welcome to your home base, from here you can go do the quiz or check your highscore.")
     #user picks where to go
     gamemode = get_integer_input("what would you like to do \n1 highscore. \n2 gaming quiz. \n3 quit \n", "please enter 1, 2 or 3 to select your answer.", 0, 4)
 
     #quit
     if gamemode == 3:
+        print("mission failed, we'll get them next time.")
         break
 
     #highscores
@@ -107,7 +108,10 @@ while True:
             clean_lines.append(arr[0:2])
         for user, score in clean_lines:
             if user == username:
-                print(f"{user}s highscore is {score}")
+                if int(score) < 1:
+                    print("You have not played the quiz yet")
+                else:
+                    print(f"{user}s highscore is {score}")
         return_to_homebase = input("press enter to return to homebase. \n")
 
 
