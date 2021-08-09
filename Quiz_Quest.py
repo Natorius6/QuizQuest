@@ -4,6 +4,45 @@ import hashlib
 import os
 import random
 
+def register_user():
+    check_login_file = open("QuizQuest/Username.txt", "r")
+    username = input("please enter a username. please note that no spaces are allowed. \n")
+    password = input("please enter a password. please note that no spaces are allowed. \n")
+    lines = check_login_file.readlines()
+    clean_lines = []
+    valid = False
+    for line in lines:
+        arr = line.split(' ')
+        clean_lines.append(arr[0:2])
+    for user, password in clean_lines:
+        if username == user:
+            print("username already taken")
+    os.system('cls')
+    login_file = open("QuizQuest/Username.txt", "a")
+    password_hashing = hashlib.sha224(password.encode())
+    hashed = password_hashing.hexdigest()
+    login_file.write(f"{username} {hashed} \n")
+    login_file.close()
+    scores_file = open("QuizQuest/Scores.txt", "a")
+    scores_file.write(f"{username} 0\n")
+    scores_file.close()
+    logged_in = True
+
+def get_highscore():
+    f= open("QuizQuest/scores.txt", "r")
+    lines = f.readlines()
+    clean_lines = []
+    for line in lines:
+        arr = line.split(' ')
+        clean_lines.append(arr[0:2])
+    for user, score in clean_lines:
+        if user == username:
+            if int(score) < 1:
+                print("You have not played the quiz yet")
+            else:
+                print(f"{user}s highscore is {score}")
+    return_to_homebase = input("press enter to return to homebase. \n")
+
 def get_integer_input(message, error, low, high):
     while True:
         try:
@@ -27,6 +66,26 @@ def give_user_score(num_correct):
     if num_correct == 1:
         replay = input(f"You got {num_correct} correct \n Press enter to return to homebase. \n")
 
+def finish_quiz(num_correct):
+    give_user_score(num_correct)
+    new_file_info = ""
+    scores_file = open("QuizQuest/Scores.txt", "r")
+    lines = scores_file.readlines()
+    clean_lines = []
+    for line in lines:
+        user, score = line.split(' ')
+        if user == username:
+            if int(score) < num_correct:
+                new_line_info = line.replace(score,str(num_correct))
+                new_file_info = f"{new_file_info}{new_line_info}\n"
+            else:
+                new_file_info = f"{new_file_info}{line}"
+        else:
+            new_file_info = f"{new_file_info}{line}"
+    scores_file.close()
+    with open("QuizQuest/Scores.txt", "w") as scores_file:
+        scores_file.write(new_file_info)
+
 
 logged_in = False
 
@@ -48,18 +107,7 @@ while True:
         new_user = get_integer_input("would you like to create a new user or login to existing user. Please note that you have to create an account if on a new machine. \n1 new user. \n2 login to existing user. \n", "please enter 1 or 2 to select your answer", 0, 3)
         #creates new user
         if new_user == 1:
-            login_file = open("QuizQuest/Username.txt", "a")
-            username = input("please enter a username. please note that no spaces are allowed. \n")
-            password = input("please enter a password. please note that no spaces are allowed. \n")
-            os.system('cls')
-            password_hashing = hashlib.sha224(password.encode())
-            hashed = password_hashing.hexdigest()
-            login_file.write(f"{username} {hashed} \n")
-            login_file.close()
-            scores_file = open("QuizQuest/Scores.txt", "a")
-            scores_file.write(f"{username} 0\n")
-            scores_file.close()
-            logged_in = True
+            register_user()
 
         #logs in to existing user
         if new_user == 2:
@@ -100,19 +148,7 @@ while True:
 
     #highscores
     if gamemode == 1:
-        f= open("QuizQuest/scores.txt", "r")
-        lines = f.readlines()
-        clean_lines = []
-        for line in lines:
-            arr = line.split(' ')
-            clean_lines.append(arr[0:2])
-        for user, score in clean_lines:
-            if user == username:
-                if int(score) < 1:
-                    print("You have not played the quiz yet")
-                else:
-                    print(f"{user}s highscore is {score}")
-        return_to_homebase = input("press enter to return to homebase. \n")
+        get_highscore()
 
 
     #quiz
@@ -124,17 +160,19 @@ while True:
         for i, question in enumerate(questions):
             print(f"question {i + 1}")
             print(unescape(question['question']))
-            all_answers = []
-            all_answers.append(question['correct_answer'])
+            question_answers = []
+            question_answers.append(question['correct_answer'])
             for ans in question["incorrect_answers"]:
-                all_answers.append(ans)
-            random.shuffle(all_answers)
-            for num, ans in enumerate(all_answers):
+                question_answers.append(ans)
+            random.shuffle(question_answers)
+            for num, ans in enumerate(question_answers):
                 print(unescape(f"{num+1}: {ans}"))
-            correct_ans = all_answers.index(question['correct_answer']) + 1
+            correct_ans = question_answers.index(question['correct_answer']) + 1
+
+            #gets users answer
             user_answer = get_integer_input("\n", "answer the question with 1-4.", 0, 5)
             if user_answer == correct_ans:
-                print("you got the right answer")
+                print("you got the right answer\n")
                 num_correct += 1
                 num_questions += 1
             elif user_answer != correct_ans:
@@ -143,23 +181,7 @@ while True:
                 num_questions += 1
             if num_questions == 10:
                 quiz_finished = True
+
         #tells user what their score was
         if quiz_finished == True:
-                give_user_score(num_correct)
-                new_file_info = ""
-                scores_file = open("QuizQuest/Scores.txt", "r")
-                lines = scores_file.readlines()
-                clean_lines = []
-                for line in lines:
-                    user, score = line.split(' ')
-                    if user == username:
-                        if int(score) < num_correct:
-                            new_line_info = line.replace(score,str(num_correct))
-                            new_file_info = f"{new_file_info}{new_line_info}\n"
-                        else:
-                            new_file_info = f"{new_file_info}{line}"
-                    else:
-                        new_file_info = f"{new_file_info}{line}"
-                scores_file.close()
-                with open("QuizQuest/Scores.txt", "w") as scores_file:
-                    scores_file.write(new_file_info)
+            finish_quiz(num_correct)
