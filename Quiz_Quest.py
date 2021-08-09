@@ -5,7 +5,7 @@ import os
 import random
 
 def register_user():
-    check_login_file = open("QuizQuest/Username.txt", "r")
+    check_login_file = open("Username.txt", "r")
     username = input("please enter a username. please note that no spaces are allowed. \n")
     password = input("please enter a password. please note that no spaces are allowed. \n")
     lines = check_login_file.readlines()
@@ -16,20 +16,22 @@ def register_user():
         clean_lines.append(arr[0:2])
     for user, password in clean_lines:
         if username == user:
-            print("username already taken")
+            print("Username already taken")
+            check_login_file.close()
+        check_login_file.close()
     os.system('cls')
-    login_file = open("QuizQuest/Username.txt", "a")
+    login_file = open("Username.txt", "a")
     password_hashing = hashlib.sha224(password.encode())
     hashed = password_hashing.hexdigest()
     login_file.write(f"{username} {hashed} \n")
     login_file.close()
-    scores_file = open("QuizQuest/Scores.txt", "a")
+    scores_file = open("Scores.txt", "a")
     scores_file.write(f"{username} 0\n")
     scores_file.close()
     logged_in = True
 
 def get_highscore():
-    f= open("QuizQuest/scores.txt", "r")
+    f= open("Scores.txt", "r")
     lines = f.readlines()
     clean_lines = []
     for line in lines:
@@ -69,7 +71,7 @@ def give_user_score(num_correct):
 def finish_quiz(num_correct):
     give_user_score(num_correct)
     new_file_info = ""
-    scores_file = open("QuizQuest/Scores.txt", "r")
+    scores_file = open("Scores.txt", "r")
     lines = scores_file.readlines()
     clean_lines = []
     for line in lines:
@@ -83,7 +85,7 @@ def finish_quiz(num_correct):
         else:
             new_file_info = f"{new_file_info}{line}"
     scores_file.close()
-    with open("QuizQuest/Scores.txt", "w") as scores_file:
+    with open("Scores.txt", "w") as scores_file:
         scores_file.write(new_file_info)
 
 
@@ -91,10 +93,10 @@ logged_in = False
 
 while True:
 
-    file = open("QuizQuest/Scores.txt", "a")
+    file = open("Scores.txt", "a")
     file.close()
 
-    file = open("QuizQuest/Username.txt", "a")
+    file = open("Username.txt", "a")
     file.close()
 
     response = requests.get('https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=multiple')
@@ -111,7 +113,7 @@ while True:
 
         #logs in to existing user
         if new_user == 2:
-            login_file = open("QuizQuest/Username.txt", "r")
+            login_file = open("Username.txt", "r")
             username = input("please enter your username. \n")
             password = input("please enter your password. \n")
             os.system('cls')
