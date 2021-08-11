@@ -64,7 +64,7 @@ def give_user_score(num_correct):
     if num_correct == 5:
         replay = input(f"You got {num_correct} correct. average score. \n Press enter to return to homebase. \n")
     if 2 <= num_correct >= 4:
-        replay = input(f"You got {num_correct} correct. Maybe try again. \n Press enter to return to homebase. \n")
+        replay = input(f"You got {num_correct} correct. just under average. \n Press enter to return to homebase. \n")
     if num_correct == 1:
         replay = input(f"You got {num_correct} correct \n Press enter to return to homebase. \n")
 
@@ -99,6 +99,7 @@ while True:
     file = open("Username.txt", "a")
     file.close()
 
+    #questions from https://opentdb.com/
     response = requests.get('https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=multiple')
 
     questions = response.json()['results']
